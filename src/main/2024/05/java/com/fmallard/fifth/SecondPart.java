@@ -1,4 +1,4 @@
-package org.example.dayfour;
+package com.fmallard.fifth;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,11 +8,11 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class D4Second {
+public class SecondPart {
     public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
         int result = 0;
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classloader.getResourceAsStream("dayfour/inputD4.txt");
+        InputStream is = classloader.getResourceAsStream("04/inputD4.txt");
         InputStreamReader streamReader = new InputStreamReader(is);
         BufferedReader reader = new BufferedReader(streamReader);
         List<char[]> table = new ArrayList<>();

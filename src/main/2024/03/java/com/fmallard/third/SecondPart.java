@@ -1,4 +1,4 @@
-package org.example.daythree;
+package com.fmallard.third;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,10 +10,10 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class D3Second {
+public class SecondPart {
     public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classloader.getResourceAsStream("daythree/inputD3.txt");
+        InputStream is = classloader.getResourceAsStream("03/inputD3.txt");
         assert is != null;
         String input = new Scanner(is, StandardCharsets.UTF_8).useDelimiter("\\A").next();
 

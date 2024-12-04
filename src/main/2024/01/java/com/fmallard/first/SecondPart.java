@@ -1,4 +1,4 @@
-package org.example.dayone;
+package com.fmallard.first;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,14 +6,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-public class D1First {
+public class SecondPart {
     public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classloader.getResourceAsStream("dayone/InputD1.txt");
+        InputStream is = classloader.getResourceAsStream("01/inputD1.txt");
         InputStreamReader streamReader = new InputStreamReader(is, StandardCharsets.UTF_8);
         BufferedReader reader = new BufferedReader(streamReader);
         List<Integer> col1 = new ArrayList<>();
@@ -27,8 +25,11 @@ public class D1First {
         Collections.sort(col2);
 
         int result = 0;
-        for(int i = 0; i < col1.size(); i++) {
-            result += Math.abs(col1.get(i) - col2.get(i));
+        Iterator<Integer> iterator = col1.iterator();
+        while(iterator.hasNext()){
+            int next = iterator.next();
+            long occurences = col2.stream().filter(n -> n.equals(next)).count();
+            result += next * occurences;
         }
         System.out.println(result);
     }
