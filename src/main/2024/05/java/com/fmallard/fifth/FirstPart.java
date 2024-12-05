@@ -5,86 +5,47 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class FirstPart {
     public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
         int result = 0;
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classloader.getResourceAsStream("04/inputD4.txt");
+        InputStream is = classloader.getResourceAsStream("05/inputD5.txt");
         InputStreamReader streamReader = new InputStreamReader(is);
         BufferedReader reader = new BufferedReader(streamReader);
-        List<char[]> table = new ArrayList<>();
-
+        List<List<Integer>> rules = new ArrayList<>();
+        List<List<Integer>> updates = new ArrayList<>();
         for (String line; (line = reader.readLine()) != null;) {
-            table.add(line.toCharArray());
+            if(line.contains("|")) {
+                List<Integer> numbers = Arrays.stream(line.split("\\|")).map(Integer::parseInt).toList();
+                rules.add(numbers);
+            } else if (line.equals("")) {
+                // skip break
+            } else {
+                List<Integer> update = Arrays.stream(line.split(",")).map(Integer::parseInt).toList();
+                updates.add(update);
+            }
         }
-        int lineIndex = 0;
-        for(char[] currentLine : table) {
-            for(int i = 0; i < currentLine.length; i++) {
-                if(currentLine[i] == 'X'){
-                    result += checkXmas(table, lineIndex, i);
-                    result += checkXmasBackwards(table, lineIndex, i);
-                    result += checkXmasUp(table, lineIndex, i);
-                    result += checkXmasUpDiagRight(table, lineIndex, i);
-                    result += checkXmasUpDiagLeft(table, lineIndex, i);
-                    result += checkXmasDown(table, lineIndex, i);
-                    result += checkXmasDownDiagLeft(table, lineIndex, i);
-                    result += checkXmasDownDiagRight(table, lineIndex, i);
+
+        for(List<Integer> update : updates) {
+            boolean isCorrect = true;
+            for(List<Integer> rule : rules) {
+                int firstRuleIndex = update.indexOf(rule.get(0));
+                int secondRuleIndex = update.indexOf(rule.get(1));
+                if(firstRuleIndex != -1 && secondRuleIndex != -1 && firstRuleIndex > secondRuleIndex) {
+                    isCorrect = false;
                 }
             }
-            lineIndex++;
+            if(isCorrect) {
+                result += update.get((int) (double) (update.size() / 2));
+            }
         }
+
+
         System.out.println(result);
     }
 
-    static int checkXmas(List<char[]> table, int lineIndex, int index) {
-        return index < table.get(lineIndex).length - 3 &&
-                table.get(lineIndex)[index+1] == 'M'
-                && table.get(lineIndex)[index+2] == 'A'
-                && table.get(lineIndex)[index+3] == 'S' ? 1 : 0;
-    }
-    static int checkXmasBackwards(List<char[]> table, int lineIndex, int index) {
-        return index >= 3 &&
-                table.get(lineIndex)[index-1] == 'M'
-                && table.get(lineIndex)[index-2] == 'A'
-                && table.get(lineIndex)[index-3] == 'S' ? 1 : 0;
-    }
-    static int checkXmasUp(List<char[]> table, int lineIndex, int index) {
-        return lineIndex >= 3
-                && table.get(lineIndex-1)[index] == 'M'
-                && table.get(lineIndex-2)[index] == 'A'
-                && table.get(lineIndex-3)[index] == 'S' ? 1 : 0;
-    }
-    static int checkXmasUpDiagRight(List<char[]> table, int lineIndex, int index) {
-        return lineIndex >= 3 && index < table.get(lineIndex).length - 3
-                && table.get(lineIndex-1)[index+1] == 'M'
-                && table.get(lineIndex-2)[index+2] == 'A'
-                && table.get(lineIndex-3)[index+3] == 'S' ? 1 : 0;
-    }
-    static int checkXmasUpDiagLeft(List<char[]> table, int lineIndex, int index) {
-        return lineIndex >= 3 && index >= 3
-                && table.get(lineIndex-1)[index-1] == 'M'
-                && table.get(lineIndex-2)[index-2] == 'A'
-                && table.get(lineIndex-3)[index-3] == 'S' ? 1 : 0;
-    }
-    static int checkXmasDown(List<char[]> table, int lineIndex, int index) {
-        return lineIndex < table.size() - 3
-                && table.get(lineIndex+1)[index] == 'M'
-                && table.get(lineIndex+2)[index] == 'A'
-                && table.get(lineIndex+3)[index] == 'S' ? 1 : 0;
-    }
-    static int checkXmasDownDiagLeft(List<char[]> table, int lineIndex, int index) {
-        return lineIndex < table.size() - 3 && index >= 3
-                && table.get(lineIndex+1)[index-1] == 'M'
-                && table.get(lineIndex+2)[index-2] == 'A'
-                && table.get(lineIndex+3)[index-3] == 'S' ? 1 : 0;
-    }
-    static int checkXmasDownDiagRight(List<char[]> table, int lineIndex, int index) {
-        return lineIndex < table.size() - 3 && index < table.get(lineIndex).length - 3
-                && table.get(lineIndex+1)[index+1] == 'M'
-                && table.get(lineIndex+2)[index+2] == 'A'
-                && table.get(lineIndex+3)[index+3] == 'S' ? 1 : 0;
-    }
+
+
 }

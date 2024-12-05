@@ -5,61 +5,62 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class SecondPart {
     public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
         int result = 0;
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classloader.getResourceAsStream("04/inputD4.txt");
+        InputStream is = classloader.getResourceAsStream("05/inputD5.txt");
         InputStreamReader streamReader = new InputStreamReader(is);
         BufferedReader reader = new BufferedReader(streamReader);
-        List<char[]> table = new ArrayList<>();
-
+        List<List<Integer>> rules = new ArrayList<>();
+        List<List<Integer>> updates = new ArrayList<>();
         for (String line; (line = reader.readLine()) != null;) {
-            table.add(line.toCharArray());
-        }
-        int lineIndex = 0;
-        for(char[] currentLine : table) {
-            for(int i = 0; i < currentLine.length; i++) {
-                if(currentLine[i] == 'A'){
-                    result += checkXmas(table, lineIndex, i);
-                }
+            if(line.contains("|")) {
+                List<Integer> numbers = Arrays.stream(line.split("\\|")).map(Integer::parseInt).toList();
+                rules.add(numbers);
+            } else if (line.isEmpty()) {
+                // skip break
+            } else {
+                List<Integer> update = Arrays.stream(line.split(",")).map(Integer::parseInt).toList();
+                updates.add(update);
             }
-            lineIndex++;
         }
+
+        for(List<Integer> update : updates) {
+            List<Integer> correct = new ArrayList<>(update.size());
+            correct.addAll(update);
+            if (!isCorrect(update, rules)) {
+                while (!isCorrect(correct, rules)) {
+                    correct = swapIncorrect(correct, rules);
+                }
+                result += correct.get((int) (double) (correct.size() / 2));
+            }
+        }
+
         System.out.println(result);
     }
 
-    static int checkXmas(List<char[]> table, int lineIndex, int index) {
-        if(lineIndex >= 1 && lineIndex <= table.size() - 2 && index >= 1 && index <= table.get(lineIndex).length - 2 ) {
-            int count = 0;
-            count += checkXmasUpDiagRight(table, lineIndex, index);
-            count += checkXmasUpDiagLeft(table, lineIndex, index);
-            count += checkXmasDownDiagLeft(table, lineIndex, index);
-            count += checkXmasDownDiagRight(table, lineIndex, index);
-            return count == 2 ? 1 : 0;
+    static boolean isCorrect(List<Integer> update, List<List<Integer>> rules) {
+        for(List<Integer> rule : rules) {
+            int firstRuleIndex = update.indexOf(rule.get(0));
+            int secondRuleIndex = update.indexOf(rule.get(1));
+            if(firstRuleIndex != -1 && secondRuleIndex != -1 && firstRuleIndex > secondRuleIndex) {
+                return false;
+            }
         }
-        else
-            return 0;
+        return true;
     }
 
-    static int checkXmasUpDiagRight(List<char[]> table, int lineIndex, int index) {
-        return table.get(lineIndex-1)[index+1] == 'M'
-                && table.get(lineIndex+1)[index-1] == 'S' ? 1 : 0;
-    }
-    static int checkXmasUpDiagLeft(List<char[]> table, int lineIndex, int index) {
-        return table.get(lineIndex-1)[index-1] == 'M'
-                        && table.get(lineIndex+1)[index+1] == 'S' ? 1 : 0;
-    }
-
-    static int checkXmasDownDiagLeft(List<char[]> table, int lineIndex, int index) {
-        return table.get(lineIndex+1)[index-1] == 'M'
-                && table.get(lineIndex-1)[index+1] == 'S' ? 1 : 0;
-    }
-    static int checkXmasDownDiagRight(List<char[]> table, int lineIndex, int index) {
-        return table.get(lineIndex+1)[index+1] == 'M'
-                && table.get(lineIndex-1)[index-1] == 'S' ? 1 : 0;
+    static List<Integer> swapIncorrect(List<Integer> update, List<List<Integer>> rules) {
+        for(List<Integer> rule : rules) {
+            int firstRuleIndex = update.indexOf(rule.get(0));
+            int secondRuleIndex = update.indexOf(rule.get(1));
+            if(firstRuleIndex != -1 && secondRuleIndex != -1 && firstRuleIndex > secondRuleIndex) {
+                Collections.swap(update, firstRuleIndex, secondRuleIndex);
+            }
+        }
+        return update;
     }
 }
