@@ -11,13 +11,11 @@ public class SecondPart {
 
     public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
         int MAP_SIZE = 130;
-        int MAX_DELAY = 10;
         Position[] moves = new Position[4];
         moves[0] = new Position(-1,0);
         moves[1] = new Position(0,1);
         moves[2] = new Position(1,0);
         moves[3] = new Position(0,-1);
-
 
         int move = 0;
         int result = 0;
@@ -37,50 +35,89 @@ public class SecondPart {
                 visitedMap[i][j] = 0;
                 if(currentChar == '^') {
                     startingPosition = new Position(i, j);
-
+                    currentPosition = new Position(i, j);
                 }
             }
             i++;
         }
-        long startTime;
+
         long methodStartTime = System.nanoTime();
-        long runDuration;
         char currentChar;
+
+        createInitialPath(currentPosition, MAP_SIZE, map, moves, move, visitedMap);
+
         for(int currentLine = 0; currentLine < MAP_SIZE; currentLine++) {
             for(int currentCol = 0; currentCol < MAP_SIZE; currentCol++) {
-                currentPosition = new Position(startingPosition.getI(), startingPosition.getJ());
-                startTime = System.nanoTime();
-                currentChar = map[currentLine][currentCol];
-                move = 0;
-                runDuration = 0;
-                if(currentChar != '^' && currentChar != '#') {
-                    map[currentLine][currentCol] = '#';
-                    while (currentPosition.getI() < MAP_SIZE && currentPosition.getI() >= 0
-                            && currentPosition.getJ() < MAP_SIZE && currentPosition.getJ() >= 0
-                            && runDuration < MAX_DELAY) {
-                        try {
-                            if (map[currentPosition.getI() + moves[move].getI()][currentPosition.getJ() + moves[move].getJ()] != '#') {
-                                currentPosition.setI(currentPosition.getI() + moves[move].getI());
-                                currentPosition.setJ(currentPosition.getJ() + moves[move].getJ());
-                            } else {
-                                move = (move + 1) % 4;
+                if(positionIsInInitialPath(currentCol, visitedMap[currentLine])) {
+                    Map<Position,List<Position>> visitedWithDirections = new HashMap<>();
+                    currentPosition = new Position(startingPosition.getI(), startingPosition.getJ());
+                    currentChar = map[currentLine][currentCol];
+                    move = 0;
+                    if (currentChar != '^' && currentChar != '#') {
+                        map[currentLine][currentCol] = '#';
+                        boolean infiniteLoop = false;
+                        while (currentPosition.getI() < MAP_SIZE && currentPosition.getI() >= 0
+                                && currentPosition.getJ() < MAP_SIZE && currentPosition.getJ() >= 0
+                                && !infiniteLoop) {
+                            try {
+                                if (isNextPositionAvailable(map, currentPosition, moves[move])) {
+                                    if(!visitedWithDirections.containsKey(currentPosition)) {
+                                        visitedWithDirections.put(currentPosition, new ArrayList<>());
+                                    }
+                                    if(visitedWithDirections.get(currentPosition).contains(moves[move])) {
+                                        infiniteLoop = true;
+                                        result++;
+                                    }
+                                    visitedWithDirections.get(currentPosition).add(moves[move]);
+                                    moveToNextPosition(currentPosition, moves[move]);
+                                } else {
+                                    move = getNextDirection(move);
+                                }
+                            } catch (ArrayIndexOutOfBoundsException e) {
+                                moveToNextPosition(currentPosition, moves[move]);
                             }
-                        } catch (ArrayIndexOutOfBoundsException e) {
-                            currentPosition.setI(currentPosition.getI() + moves[move].getI());
-                            currentPosition.setJ(currentPosition.getJ() + moves[move].getJ());
                         }
-                        runDuration = (System.nanoTime() - startTime) / 1000000;
+
+                        map[currentLine][currentCol] = currentChar;
                     }
-                    if (runDuration >= MAX_DELAY) {
-                        result++;
-                    }
-                    map[currentLine][currentCol] = currentChar;
                 }
             }
         }
         long endTime = System.nanoTime();
         long duration = (endTime - methodStartTime)/1000000;
         System.out.println("Result in " + duration + "ms : " + result);
+    }
+
+    private static boolean positionIsInInitialPath(int currentCol, int[] visitedMap) {
+        return visitedMap[currentCol] == 1;
+    }
+
+    private static void moveToNextPosition(Position currentPosition, Position direction) {
+        currentPosition.setI(currentPosition.getI() + direction.getI());
+        currentPosition.setJ(currentPosition.getJ() + direction.getJ());
+    }
+
+    private static void createInitialPath(Position currentPosition, int MAP_SIZE, char[][] map, Position[] moves, int directionIndex, int[][] visitedMap) {
+        while(currentPosition.getI() < MAP_SIZE && currentPosition.getI()>=0 && currentPosition.getJ() < MAP_SIZE && currentPosition.getJ()>=0) {
+            try{
+                if(isNextPositionAvailable(map, currentPosition, moves[directionIndex])){
+                    moveToNextPosition(currentPosition, moves[directionIndex]);
+                    visitedMap[currentPosition.getI()][currentPosition.getJ()] = 1;
+                } else {
+                    directionIndex = getNextDirection(directionIndex);
+                }
+            } catch (ArrayIndexOutOfBoundsException e) {
+                moveToNextPosition(currentPosition, moves[directionIndex]);
+            }
+        }
+    }
+
+    private static int getNextDirection(int move) {
+        return (move + 1) % 4;
+    }
+
+    private static boolean isNextPositionAvailable(char[][] map, Position currentPosition, Position moves) {
+        return map[currentPosition.getI() + moves.getI()][currentPosition.getJ() + moves.getJ()] != '#';
     }
 
     static class Position {
@@ -107,6 +144,27 @@ public class SecondPart {
         public Position(int i, int j) {
             this.i = i;
             this.j = j;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Position position = (Position) o;
+            return i == position.i && j == position.j;
+        }
+
+        @Override
+        public String toString() {
+            return "Position{" +
+                    "i=" + i +
+                    ", j=" + j +
+                    '}';
+        }
+
+        @Override
+        public int hashCode() {
+            return this.toString().hashCode();
         }
     }
 

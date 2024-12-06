@@ -61,7 +61,7 @@ public class FirstPart {
                 result += visitedMap[i][j];
             }
         }
-        long duration = endTime - startTime;
+        long duration = (endTime - startTime) / 1000000;
         System.out.println("Result in " + duration + "ms : " + result);
     }
 
