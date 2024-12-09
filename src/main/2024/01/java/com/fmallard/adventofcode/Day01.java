@@ -1,4 +1,4 @@
-package com.fmallard.first;
+package com.fmallard.adventofcode;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,10 +6,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class SecondPart {
+public class Day01 {
     public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
+        long startTime = System.nanoTime();
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         InputStream is = classloader.getResourceAsStream("01/inputD1.txt");
         InputStreamReader streamReader = new InputStreamReader(is, StandardCharsets.UTF_8);
@@ -24,13 +27,16 @@ public class SecondPart {
         Collections.sort(col1);
         Collections.sort(col2);
 
-        int result = 0;
-        Iterator<Integer> iterator = col1.iterator();
-        while(iterator.hasNext()){
-            int next = iterator.next();
-            long occurences = col2.stream().filter(n -> n.equals(next)).count();
-            result += next * occurences;
+        int result_p1 = 0;
+        for(int i = 0; i < col1.size(); i++) {
+            result_p1 += Math.abs(col1.get(i) - col2.get(i));
         }
-        System.out.println(result);
+        int result_p2 = 0;
+        for (int next : col1) {
+            long occurences = col2.stream().filter(n -> n.equals(next)).count();
+            result_p2 += (int) (next * occurences);
+        }
+        long totalTime = (System.nanoTime() - startTime) / 1000000;
+        System.out.printf("Results in %dms : p1=%d, p2=%d%n", totalTime, result_p1, result_p2);
     }
 }

@@ -1,4 +1,4 @@
-package com.fmallard.first;
+package com.fmallard.adventofcode;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,26 +10,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class FirstPart {
+public class Day10 {
     public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
+        long startTime = System.nanoTime();
+        int result_p1 = 0;
+        int result_p2 = 0;
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classloader.getResourceAsStream("01/inputD1.txt");
+        InputStream is = classloader.getResourceAsStream("10/inputD10.txt");
         InputStreamReader streamReader = new InputStreamReader(is, StandardCharsets.UTF_8);
         BufferedReader reader = new BufferedReader(streamReader);
-        List<Integer> col1 = new ArrayList<>();
-        List<Integer> col2 = new ArrayList<>();
-        for (String line; (line = reader.readLine()) != null;) {
-            String[] split = line.split("(\\s+)");
-            col1.add(Integer.parseInt(split[0]));
-            col2.add(Integer.parseInt(split[1]));
-        }
-        Collections.sort(col1);
-        Collections.sort(col2);
 
-        int result = 0;
-        for(int i = 0; i < col1.size(); i++) {
-            result += Math.abs(col1.get(i) - col2.get(i));
+        for (String line; (line = reader.readLine()) != null;) {
+
         }
-        System.out.println(result);
+
+        long totalTime = (System.nanoTime() - startTime) / 1000000;
+        System.out.printf("Results in %dms : p1=%d, p2=%d%n", totalTime, result_p1, result_p2);
     }
 }

@@ -1,15 +1,20 @@
-package com.fmallard.fifth;
+package com.fmallard.adventofcode;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-public class SecondPart {
+public class Day05 {
     public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
-        int result = 0;
+        long startTime = System.nanoTime();
+        int result_p1 = 0;
+        int result_p2 = 0;
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         InputStream is = classloader.getResourceAsStream("05/inputD5.txt");
         InputStreamReader streamReader = new InputStreamReader(is);
@@ -29,31 +34,42 @@ public class SecondPart {
         }
 
         for(List<Integer> update : updates) {
+            boolean isCorrect = true;
+            for(List<Integer> rule : rules) {
+                int firstRuleIndex = update.indexOf(rule.get(0));
+                int secondRuleIndex = update.indexOf(rule.get(1));
+                if(firstRuleIndex != -1 && secondRuleIndex != -1 && firstRuleIndex > secondRuleIndex) {
+                    isCorrect = false;
+                }
+            }
             List<Integer> correct = new ArrayList<>(update.size());
             correct.addAll(update);
-            if (!isCorrect(update, rules)) {
-                while (!isCorrect(correct, rules)) {
-                    correct = swapIncorrect(correct, rules);
+            if (isIncorrect(update, rules)) {
+                while (isIncorrect(correct, rules)) {
+                    swapIncorrect(correct, rules);
                 }
-                result += correct.get((int) (double) (correct.size() / 2));
+                result_p2 += correct.get((int) (double) (correct.size() / 2));
+            }
+            if(isCorrect) {
+                result_p1 += update.get((int) (double) (update.size() / 2));
             }
         }
-
-        System.out.println(result);
+        long totalTime = (System.nanoTime() - startTime) / 1000000;
+        System.out.printf("Results in %dms : p1=%d, p2=%d%n", totalTime, result_p1, result_p2);
     }
 
-    static boolean isCorrect(List<Integer> update, List<List<Integer>> rules) {
+    static boolean isIncorrect(List<Integer> update, List<List<Integer>> rules) {
         for(List<Integer> rule : rules) {
             int firstRuleIndex = update.indexOf(rule.get(0));
             int secondRuleIndex = update.indexOf(rule.get(1));
             if(firstRuleIndex != -1 && secondRuleIndex != -1 && firstRuleIndex > secondRuleIndex) {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
-    static List<Integer> swapIncorrect(List<Integer> update, List<List<Integer>> rules) {
+    static void swapIncorrect(List<Integer> update, List<List<Integer>> rules) {
         for(List<Integer> rule : rules) {
             int firstRuleIndex = update.indexOf(rule.get(0));
             int secondRuleIndex = update.indexOf(rule.get(1));
@@ -61,6 +77,6 @@ public class SecondPart {
                 Collections.swap(update, firstRuleIndex, secondRuleIndex);
             }
         }
-        return update;
     }
+
 }
