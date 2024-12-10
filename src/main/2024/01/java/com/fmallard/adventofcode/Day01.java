@@ -15,6 +15,7 @@ public class Day01 {
         long startTime = System.nanoTime();
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         InputStream is = classloader.getResourceAsStream("01/inputD1.txt");
+        assert is != null;
         InputStreamReader streamReader = new InputStreamReader(is, StandardCharsets.UTF_8);
         BufferedReader reader = new BufferedReader(streamReader);
         List<Integer> col1 = new ArrayList<>();

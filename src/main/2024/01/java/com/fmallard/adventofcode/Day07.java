@@ -16,6 +16,7 @@ public class Day07 {
         long result_p2 = 0;
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         InputStream is = classloader.getResourceAsStream("07/inputD7.txt");
+        assert is != null;
         InputStreamReader streamReader = new InputStreamReader(is);
         BufferedReader reader = new BufferedReader(streamReader);
 

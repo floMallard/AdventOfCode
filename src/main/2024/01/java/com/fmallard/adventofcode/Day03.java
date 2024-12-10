@@ -15,6 +15,7 @@ public class Day03 {
         long startTime = System.nanoTime();
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         InputStream is = classloader.getResourceAsStream("03/inputD3.txt");
+        assert is != null;
         String input = new Scanner(is, StandardCharsets.UTF_8).useDelimiter("\\A").next();
         Pattern mulPattern = Pattern.compile("(mul\\(\\d{1,3},\\d{1,3}\\))");
         Matcher matcher = mulPattern.matcher(input);

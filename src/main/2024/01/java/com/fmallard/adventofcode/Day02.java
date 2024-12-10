@@ -14,6 +14,7 @@ public class Day02 {
         long startTime = System.nanoTime();
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         InputStream is = classloader.getResourceAsStream("02/inputD2.txt");
+        assert is != null;
         InputStreamReader streamReader = new InputStreamReader(is, StandardCharsets.UTF_8);
         BufferedReader reader = new BufferedReader(streamReader);
         int minIncrement = 1;

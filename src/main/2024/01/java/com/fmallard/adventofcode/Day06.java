@@ -26,6 +26,7 @@ public class Day06 {
         int result_p2 = 0;
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         InputStream is = classloader.getResourceAsStream("06/inputD6.txt");
+        assert is != null;
         InputStreamReader streamReader = new InputStreamReader(is);
         BufferedReader reader = new BufferedReader(streamReader);
         char[][] map = new char[MAP_SIZE][MAP_SIZE];
@@ -130,50 +131,4 @@ public class Day06 {
         currentPosition.setJ(currentPosition.getJ() + direction.getJ());
     }
 
-    static class Position {
-        public int getI() {
-            return i;
-        }
-
-        public void setI(int i) {
-            this.i = i;
-        }
-
-        int i;
-
-        public int getJ() {
-            return j;
-        }
-
-        public void setJ(int j) {
-            this.j = j;
-        }
-
-        int j;
-
-        public Position(int i, int j) {
-            this.i = i;
-            this.j = j;
-        }
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Position position = (Position) o;
-            return i == position.i && j == position.j;
-        }
-
-        @Override
-        public String toString() {
-            return "Position{" +
-                    "i=" + i +
-                    ", j=" + j +
-                    '}';
-        }
-
-        @Override
-        public int hashCode() {
-            return this.toString().hashCode();
-        }
-    }
 }
