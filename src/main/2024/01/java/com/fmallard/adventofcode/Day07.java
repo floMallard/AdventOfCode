@@ -73,13 +73,9 @@ public class Day07 {
             this.hasNext = true;
         }
 
-        boolean hasNext() {
-            return hasNext;
-        }
-
         String emitNext() {
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < positions.length; ++i) sb.append(chars[positions[i]]);
+            for (int position : positions) sb.append(chars[position]);
             for (int i = 0; i < positions.length; ++i) {
                 if (++positions[i] < chars.length) {
                     hasNext = true;

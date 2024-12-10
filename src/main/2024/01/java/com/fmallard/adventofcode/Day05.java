@@ -26,9 +26,7 @@ public class Day05 {
             if(line.contains("|")) {
                 List<Integer> numbers = Arrays.stream(line.split("\\|")).map(Integer::parseInt).toList();
                 rules.add(numbers);
-            } else if (line.isEmpty()) {
-                // skip break
-            } else {
+            } else if (!line.isEmpty()) {
                 List<Integer> update = Arrays.stream(line.split(",")).map(Integer::parseInt).toList();
                 updates.add(update);
             }
