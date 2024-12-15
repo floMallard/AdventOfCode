@@ -15,7 +15,7 @@ public class Day09 {
         long result_p1;
         long result_p2;
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classloader.getResourceAsStream("09/inputD9.txt");
+        InputStream is = classloader.getResourceAsStream("09/input.txt");
         List<Integer> fileSystemP1 = readIntegerLine(is);
         List<Integer> fileSystemP2 = new ArrayList<>(fileSystemP1);
         while(hasFreeSpaceInBetween(fileSystemP1)) {

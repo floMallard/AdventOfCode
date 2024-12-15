@@ -13,7 +13,7 @@ public class Day02 {
     public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
         long startTime = System.nanoTime();
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classloader.getResourceAsStream("02/inputD2.txt");
+        InputStream is = classloader.getResourceAsStream("02/input.txt");
         assert is != null;
         InputStreamReader streamReader = new InputStreamReader(is, StandardCharsets.UTF_8);
         BufferedReader reader = new BufferedReader(streamReader);

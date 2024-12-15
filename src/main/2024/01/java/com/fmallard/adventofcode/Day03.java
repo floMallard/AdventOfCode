@@ -14,7 +14,7 @@ public class Day03 {
     public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
         long startTime = System.nanoTime();
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classloader.getResourceAsStream("03/inputD3.txt");
+        InputStream is = classloader.getResourceAsStream("03/input.txt");
         assert is != null;
         String input = new Scanner(is, StandardCharsets.UTF_8).useDelimiter("\\A").next();
         Pattern mulPattern = Pattern.compile("(mul\\(\\d{1,3},\\d{1,3}\\))");
